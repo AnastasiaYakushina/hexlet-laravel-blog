@@ -38,4 +38,25 @@ class ArticleController extends Controller
 
         return redirect()->route('articles.index')->with('success', 'Статья создана!');
     }
+
+    public function edit($id)
+    {
+        $article = Article::findOrFail($id);
+        return view('article.edit', compact('article'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $article = Article::findOrFail($id);
+
+        $data = $request->validate([
+            'name' => "required|unique:articles,name,{$article->id}",
+            'body' => 'required|min:100',
+        ]);
+
+        $article->fill($data);
+        $article->save();
+
+        return redirect()->route('articles.index')->with('success', 'Статья обновлена!');
+    }
 }
