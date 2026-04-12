@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Article;
+use App\Http\Requests\ArticleRequest;
 
 class ArticleController extends Controller
 {
@@ -25,16 +26,9 @@ class ArticleController extends Controller
         return view('article.create', compact('article'));
     }
 
-    public function store(Request $request)
+    public function store(ArticleRequest $request)
     {
-        $data = $request->validate([
-            'name' => 'required|unique:articles',
-            'body' => 'required|min:100',
-        ]);
-
-        $article = new Article();
-        $article->fill($data);
-        $article->save();
+        Article::create($request->validated());
 
         return redirect()->route('articles.index')->with('success', 'Статья создана!');
     }
@@ -45,17 +39,10 @@ class ArticleController extends Controller
         return view('article.edit', compact('article'));
     }
 
-    public function update(Request $request, $id)
+    public function update(ArticleRequest $request, $id)
     {
         $article = Article::findOrFail($id);
-
-        $data = $request->validate([
-            'name' => "required|unique:articles,name,{$article->id}",
-            'body' => 'required|min:100',
-        ]);
-
-        $article->fill($data);
-        $article->save();
+        $article->update($request->validated());
 
         return redirect()->route('articles.index')->with('success', 'Статья обновлена!');
     }
