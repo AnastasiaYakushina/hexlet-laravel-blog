@@ -21,3 +21,5 @@ Route::patch('articles/{id}', [ArticleController::class, 'update'])->name('artic
 Route::get('articles/{id}', [ArticleController::class, 'show'])->name('articles.show');
 
 Route::post('articles', [ArticleController::class, 'store'])->name('articles.store');
+
+Route::delete('articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
